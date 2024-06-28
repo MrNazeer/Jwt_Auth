@@ -1,7 +1,11 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import {Container, Card, Button, Form} from "react-bootstrap";
+import {AuthContext} from "../context/AuthContext";
+import {useNavigate} from "react-router-dom";
 
 export default function Login() {
+  const navigate = useNavigate();
+  const {user, login} = useContext(AuthContext);
   const [userData, setuserData] = useState({
     email: "",
     pass: "",
@@ -14,9 +18,12 @@ export default function Login() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(userData);
+    await login(userData.email, userData.pass);
+    console.log("result", user ? user.data.email : user);
+    navigate("/home");
     setuserData({
       email: "",
       pass: "",
@@ -30,6 +37,12 @@ export default function Login() {
       pass: "",
     });
   };
+
+  // if (user !== null) {
+  //   if (user.data.email) {
+  //     navigate("/home");
+  //   }
+  // }
 
   return (
     <Container style={{minHeight: "100vh"}} className="d-flex align-items-center justify-content-center">
